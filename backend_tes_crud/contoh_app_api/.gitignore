@@ -1,0 +1,12 @@
+.env
+*.env
+storage/fonts/dompdf_font_family_cache.php
+/node_modules
+*node_modules
+/vendor
+*vendor
+
+
+vendor
+node_modules
+vendor

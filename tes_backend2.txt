@@ -1,0 +1,50 @@
+select * from employee ;
+
+select * from employee e where JOB_TITLE = 'manager';
+select * from sales s ;
+
+select NAME ,SALARY  from employee e where DEPARTMENT  = 'sales' or DEPARTMENT ='marketing';
+
+SELECT AVG(SALARY) AS AVERAGE_SALARY
+FROM EMPLOYEE
+WHERE JOINED_DATE >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR);
+
+SELECT NAME , SUM(SALES)
+FROM employee e
+JOIN sales sd ON e.EMPLOYEE_ID = sd.EMPLOYEE_ID
+GROUP BY e.NAME,sd.SALES 
+ORDER BY sd.SALES  desc
+LIMIT 5;
+
+SELECT e.NAME, e.SALARY, d.RATA
+FROM employee e
+INNER JOIN (
+    SELECT DEPARTMENT, AVG(SALARY) AS RATA
+    FROM employee
+    GROUP BY DEPARTMENT
+    HAVING AVG(SALARY) > (SELECT AVG(SALARY) FROM employee)
+) d ON e.DEPARTMENT = d.DEPARTMENT;
+
+
+SELECT NAME, TOTAL_SALES, RANK() OVER (
+		ORDER BY TOTAL_SALES
+	) myrank
+FROM (
+    SELECT e.NAME, SUM(sd.SALES) AS TOTAL_SALES
+    FROM employee e
+    JOIN sales  sd ON e.EMPLOYEE_ID = sd.EMPLOYEE_ID
+    GROUP BY e.NAME
+) AS SALES_SUMMARY;
+
+
+DELIMITER //
+
+CREATE PROCEDURE GetEmployeesInDepartment(IN departmentName VARCHAR(255))
+BEGIN
+    SELECT e.NAME, e.SALARY
+    FROM employees e
+    WHERE e.DEPARTMENT = departmentName;
+END;
+//
+
+DELIMITER ;
